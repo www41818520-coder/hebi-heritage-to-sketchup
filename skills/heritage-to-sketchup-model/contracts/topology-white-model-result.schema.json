@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cad_to_sketchup.topology_white_model_result.2026-08-05",
+  "title": "Topology White Model Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "status", "topology_plan_path", "topology_plan_sha256", "model_path", "model_sha256", "root_group", "root_persistent_id", "review_views", "unresolved"],
+  "properties": {
+    "schema": {"const": "cad_to_sketchup.topology_white_model_result.2026-08-05"},
+    "status": {"const": "generated"},
+    "topology_plan_path": {"type": "string", "minLength": 1},
+    "topology_plan_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "model_path": {"type": "string", "minLength": 1},
+    "model_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "root_group": {"const": "HEBI_TOPOLOGY_WHITE_MODEL"},
+    "root_persistent_id": {"type": "integer", "minimum": 1},
+    "review_views": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "building-topology.schema.json#/$defs/artifact_view"}
+    },
+    "unresolved": {"type": "array", "maxItems": 0}
+  }
+}

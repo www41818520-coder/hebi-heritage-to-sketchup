@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cad_reader.independent_review.2026-08-05",
+  "title": "Independent CAD Reader Review",
+  "type": "object",
+  "required": ["schema", "source_package_sha256", "reviewer", "frames", "views", "edge_explanations"],
+  "properties": {
+    "schema": {"const": "cad_reader.independent_review.2026-08-05"},
+    "source_package_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "reviewer": {
+      "type": "object",
+      "required": ["type", "id", "derivation_id"],
+      "properties": {
+        "type": {"enum": ["independent_agent", "human", "independent_agent_or_human"]},
+        "id": {"type": "string"},
+        "derivation_id": {"type": "string"}
+      }
+    },
+    "frames": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["full_border_visible", "readable_at_review_resolution", "not_clipped"],
+        "properties": {
+          "full_border_visible": {"type": "boolean"},
+          "readable_at_review_resolution": {"type": "boolean"},
+          "not_clipped": {"type": "boolean"}
+        }
+      }
+    },
+    "views": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["full_frame", "title_visible", "readable_annotations", "axis_bubbles_visible", "not_clipped", "separated_drawing_type", "source_coverage_checked", "view_inventory_confirmed"],
+        "properties": {
+          "full_frame": {"type": "boolean"},
+          "title_visible": {"type": "boolean"},
+          "readable_annotations": {"type": "boolean"},
+          "axis_bubbles_visible": {"type": "boolean"},
+          "not_clipped": {"type": "boolean"},
+          "separated_drawing_type": {"type": "boolean"},
+          "source_coverage_checked": {"type": "boolean"},
+          "view_inventory_confirmed": {"type": "boolean"}
+        }
+      }
+    },
+    "edge_explanations": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["handle", "reason"],
+          "properties": {
+            "handle": {"type": "string", "minLength": 1},
+            "reason": {"type": "string"}
+          }
+        }
+      }
+    },
+    "notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

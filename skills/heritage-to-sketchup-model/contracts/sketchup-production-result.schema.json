@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cad_to_sketchup.sketchup_production_result.2026-08-06",
+  "title": "SketchUp Production Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "status", "build_plan_path", "build_plan_sha256", "source_model_path", "source_model_sha256", "output_model_path", "output_model_sha256", "root_group", "root_persistent_id", "element_results", "statistics", "geometry_checks", "report_path", "report_sha256", "unresolved"],
+  "properties": {
+    "schema": {"const": "cad_to_sketchup.sketchup_production_result.2026-08-06"}, "status": {"const": "generated_and_self_checked"},
+    "build_plan_path": {"type": "string", "minLength": 1}, "build_plan_sha256": {"$ref": "building-topology.schema.json#/$defs/sha256"},
+    "source_model_path": {"type": "string", "minLength": 1}, "source_model_sha256": {"$ref": "building-topology.schema.json#/$defs/sha256"},
+    "output_model_path": {"type": "string", "minLength": 1}, "output_model_sha256": {"$ref": "building-topology.schema.json#/$defs/sha256"},
+    "root_group": {"const": "HEBI_PRODUCTION_BUILD_2026_08_06"}, "root_persistent_id": {"type": "integer", "minimum": 1},
+    "element_results": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/element_result"}},
+    "statistics": {"$ref": "#/$defs/statistics"}, "geometry_checks": {"$ref": "#/$defs/checks"},
+    "report_path": {"type": "string", "minLength": 1}, "report_sha256": {"$ref": "building-topology.schema.json#/$defs/sha256"}, "unresolved": {"type": "array", "maxItems": 0}
+  },
+  "$defs": {
+    "element_result": {"type": "object", "additionalProperties": false, "required": ["topology_id", "kind", "status", "sketchup_entity_ids", "group_name", "generated_solids", "failed_solids"], "properties": {"topology_id": {"type": "string", "minLength": 1}, "kind": {"enum": ["level", "wall", "internal_wall", "slab", "roof", "roof_light", "opening", "curtain_wall", "sweep", "canopy", "column", "entrance_ramp", "entrance_steps", "material"]}, "status": {"const": "PASS"}, "sketchup_entity_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "integer", "minimum": 1}}, "group_name": {"type": "string", "minLength": 1}, "generated_solids": {"type": "integer", "minimum": 0}, "failed_solids": {"const": 0}}},
+    "statistics": {"type": "object", "additionalProperties": false, "required": ["unique_semantic_inputs", "level_processing_occurrences", "generated_solids", "failed_solids", "unique_openings", "opening_occurrences", "output_bounds_mm"], "properties": {"unique_semantic_inputs": {"type": "integer", "minimum": 1}, "level_processing_occurrences": {"type": "integer", "minimum": 1}, "generated_solids": {"type": "integer", "minimum": 1}, "failed_solids": {"const": 0}, "unique_openings": {"type": "integer", "minimum": 0}, "opening_occurrences": {"type": "integer", "minimum": 0}, "output_bounds_mm": {"type": "object", "additionalProperties": false, "required": ["min", "max"], "properties": {"min": {"$ref": "building-topology.schema.json#/$defs/point3"}, "max": {"$ref": "building-topology.schema.json#/$defs/point3"}}}}},
+    "checks": {"type": "object", "additionalProperties": false, "required": ["complete_element_coverage", "continuous_wall_groups", "slabs_contained", "true_openings", "opening_assemblies_complete", "curtain_wall_systems_complete", "corner_continuity", "no_duplicate_exterior_faces", "canopies_complete", "materials_traceable", "debug_geometry_clear"], "properties": {"complete_element_coverage": {"const": true}, "continuous_wall_groups": {"const": true}, "slabs_contained": {"const": true}, "true_openings": {"const": true}, "opening_assemblies_complete": {"const": true}, "curtain_wall_systems_complete": {"const": true}, "corner_continuity": {"const": true}, "no_duplicate_exterior_faces": {"const": true}, "canopies_complete": {"const": true}, "materials_traceable": {"const": true}, "debug_geometry_clear": {"const": true}}}
+  }
+}

@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cad_to_sketchup.source_index.2026-08-05",
+  "title": "CAD Source Index Contract",
+  "type": "object",
+  "required": ["schema", "contract_id", "project_id", "revision", "status", "units", "sources", "frames", "views", "semantic_summary", "reader_audit", "required_roles", "unresolved"],
+  "properties": {
+    "schema": {"const": "cad_to_sketchup.source_index.2026-08-05"},
+    "contract_id": {"type": "string", "minLength": 1},
+    "project_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "status": {"const": "verified"},
+    "upstream": {"type": "array", "maxItems": 0},
+    "units": {
+      "type": "object",
+      "required": ["value", "basis"],
+      "properties": {
+        "value": {"enum": ["mm", "cm", "m", "in", "ft"]},
+        "basis": {"enum": ["cad_header", "user_confirmed"]}
+      }
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "path", "role", "sha256"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "path": {"type": "string", "minLength": 1},
+          "role": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}
+        }
+      }
+    },
+    "frames": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "source_id", "bounds", "complete", "verification_state", "preview_jpg", "vector_master", "render_manifest", "trace_bounds_svg", "evidence_sha256", "render_coverage"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "complete": {"const": true},
+          "verification_state": {"const": "verified"},
+          "render_coverage": {
+            "type": "object",
+            "required": ["status", "vector_status", "coverage_ratio", "missing_handles", "missing_entity_classes", "edge_review"],
+            "properties": {
+              "status": {"const": "verified"},
+              "vector_status": {"const": "verified"},
+              "coverage_ratio": {"const": 1.0},
+              "missing_handles": {"type": "array", "maxItems": 0},
+              "edge_review": {"$ref": "#/$defs/edge_review"},
+              "missing_entity_classes": {"type": "array", "maxItems": 0}
+            }
+          }
+        }
+      }
+    },
+    "views": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "frame_id", "title", "title_evidence", "role", "qa_view", "semantic_index", "bounds", "segmentation_method", "segmentation_confidence", "segmentation_evidence", "complete", "readable", "source_entity_ids", "render_manifest", "trace_bounds_svg", "evidence_sha256", "vector_coverage"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "frame_id": {"type": "string", "minLength": 1},
+          "title": {"type": "string", "minLength": 1},
+          "title_evidence": {
+            "type": "object",
+            "required": ["raw", "canonical", "confidence", "fragments"],
+            "properties": {
+              "canonical": {"type": "string", "minLength": 1},
+              "confidence": {"enum": ["high", "medium"]},
+              "fragments": {"type": "array", "minItems": 1}
+            }
+          },
+          "role": {"enum": ["plan", "roof_plan", "elevation", "section", "detail", "schedule", "context"]},
+          "qa_view": {"type": "string", "minLength": 1},
+          "semantic_index": {
+            "type": "object",
+            "required": ["title", "role", "direction", "axis", "levels", "dimensions", "qa_view", "status", "blocking_reasons"],
+            "properties": {
+              "status": {"const": "verified"},
+              "blocking_reasons": {"type": "array", "maxItems": 0}
+            }
+          },
+          "segmentation_method": {
+            "enum": ["single_view_full_frame", "title_geometry_whitespace_partition", "legacy_verified_bounds"]
+          },
+          "segmentation_confidence": {"enum": ["high", "medium"]},
+          "segmentation_evidence": {"type": "object"},
+          "complete": {"type": "boolean"},
+          "readable": {"type": "boolean"},
+          "source_entity_ids": {"type": "array", "minItems": 1},
+          "vector_coverage": {
+            "type": "object",
+            "required": ["status", "coverage_ratio", "missing_handles", "edge_review"],
+            "properties": {
+              "status": {"const": "verified"},
+              "coverage_ratio": {"const": 1.0},
+              "missing_handles": {"type": "array", "maxItems": 0},
+              "edge_review": {"$ref": "#/$defs/edge_review"}
+            }
+          }
+        }
+      }
+    },
+    "semantic_summary": {
+      "type": "object",
+      "required": ["status", "qa_view_keys", "duplicate_qa_view_keys", "all_titles_canonical", "all_model_roles_resolved", "all_elevations_and_sections_directional"],
+      "properties": {
+        "status": {"const": "verified"},
+        "duplicate_qa_view_keys": {"type": "array", "maxItems": 0},
+        "all_titles_canonical": {"const": true},
+        "all_model_roles_resolved": {"const": true},
+        "all_elevations_and_sections_directional": {"const": true}
+      }
+    },
+    "reader_audit": {
+      "type": "object",
+      "required": ["schema", "reviewer", "source_package_sha256", "review_sha256"],
+      "properties": {
+        "schema": {"const": "cad_reader.independent_review.2026-08-05"},
+        "source_package_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+        "review_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}
+      }
+    },
+    "required_roles": {"type": "array", "items": {"type": "string"}},
+    "unresolved": {"type": "array", "maxItems": 0}
+  },
+  "$defs": {
+    "edge_review": {
+      "type": "object",
+      "required": ["status", "unexplained_handles"],
+      "properties": {
+        "status": {"const": "verified"},
+        "unexplained_handles": {"type": "array", "maxItems": 0},
+        "explained_handles": {"type": "array"}
+      }
+    }
+  }
+}

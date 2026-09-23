@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cad_to_sketchup.independent_qa.2026-08-06",
+  "title": "Independent QA Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "contract_id", "project_id", "revision", "status", "upstream", "tolerance_mm", "cad_provenance", "model_provenance", "machine_result", "independent_review", "required_views", "view_results", "cross_view_checks", "user_confirmation", "unresolved"],
+  "properties": {
+    "schema": {"const": "cad_to_sketchup.independent_qa.2026-08-06"},
+    "contract_id": {"type": "string", "minLength": 1},
+    "project_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "status": {"const": "PASS"},
+    "tolerance_mm": {"type": "number", "exclusiveMinimum": 0},
+    "upstream": {"type": "array", "minItems": 4, "items": {"$ref": "#/$defs/upstream"}},
+    "cad_provenance": {"$ref": "#/$defs/provenance"},
+    "model_provenance": {"$ref": "#/$defs/provenance"},
+    "machine_result": {"$ref": "#/$defs/artifact"},
+    "independent_review": {"allOf": [{"$ref": "#/$defs/artifact"}, {"type": "object", "required": ["reviewer_derivation_id"], "properties": {"reviewer_derivation_id": {"type": "string", "minLength": 1}}}]},
+    "required_views": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "view_results": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["source_view_id", "qa_view", "role", "status", "cad_view", "model_view", "overlay", "metrics", "checks"],
+        "properties": {
+          "source_view_id": {"type": "string", "minLength": 1},
+          "qa_view": {"type": "string", "minLength": 1},
+          "role": {"enum": ["plan", "roof_plan", "elevation", "section"]},
+          "status": {"const": "PASS"},
+          "cad_view": {"$ref": "#/$defs/artifact"},
+          "model_view": {"$ref": "#/$defs/artifact"},
+          "overlay": {"$ref": "#/$defs/artifact"},
+          "metrics": {"type": "object", "additionalProperties": false, "required": ["false_negative_count", "false_positive_count", "max_alignment_delta_mm"], "properties": {"false_negative_count": {"const": 0}, "false_positive_count": {"const": 0}, "max_alignment_delta_mm": {"type": "number", "minimum": 0}}},
+          "checks": {"type": "object", "additionalProperties": false, "required": ["full_view_unclipped", "same_orientation", "same_scale", "silhouette", "opening_outlines", "true_openings", "levels", "materials", "no_unsupported_geometry"], "properties": {"full_view_unclipped": {"const": true}, "same_orientation": {"const": true}, "same_scale": {"const": true}, "silhouette": {"const": true}, "opening_outlines": {"const": true}, "true_openings": {"const": true}, "levels": {"const": true}, "materials": {"const": true}, "no_unsupported_geometry": {"const": true}}}
+        }
+      }
+    },
+    "cross_view_checks": {
+      "type": "object", "additionalProperties": false,
+      "required": ["every_floor_plan", "four_facades", "required_sections", "plan_elevation_registration", "plan_section_registration", "opposite_facade_orientation", "corner_continuity", "vertical_datum_consistency", "component_reuse", "canopy_assembly", "parapet_roof_silhouette", "material_junction_continuity", "untracked_geometry_clear"],
+      "properties": {
+        "every_floor_plan": {"const": true}, "four_facades": {"const": true}, "required_sections": {"const": true},
+        "plan_elevation_registration": {"const": true}, "plan_section_registration": {"const": true}, "opposite_facade_orientation": {"const": true},
+        "corner_continuity": {"const": true}, "vertical_datum_consistency": {"const": true}, "component_reuse": {"const": true},
+        "canopy_assembly": {"const": true}, "parapet_roof_silhouette": {"const": true}, "material_junction_continuity": {"const": true}, "untracked_geometry_clear": {"const": true}
+      }
+    },
+    "user_confirmation": {
+      "oneOf": [
+        {"type": "object", "additionalProperties": false, "required": ["confirmed"], "properties": {"confirmed": {"const": false}}},
+        {
+          "type": "object", "additionalProperties": false,
+          "required": ["confirmed", "confirmation_id", "instruction", "accepted_at", "acceptance_basis_sha256", "active_model_sha256", "machine_result_sha256", "independent_review_sha256"],
+          "properties": {
+            "confirmed": {"const": true},
+            "confirmation_id": {"type": "string", "minLength": 1},
+            "instruction": {"type": "string", "minLength": 1},
+            "accepted_at": {"type": "string", "format": "date-time"},
+            "acceptance_basis_sha256": {"$ref": "#/$defs/sha256"},
+            "active_model_sha256": {"$ref": "#/$defs/sha256"},
+            "machine_result_sha256": {"$ref": "#/$defs/sha256"},
+            "independent_review_sha256": {"$ref": "#/$defs/sha256"}
+          }
+        }
+      ]
+    },
+    "unresolved": {"type": "array", "maxItems": 0}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "upstream": {"type": "object", "additionalProperties": false, "required": ["kind", "path", "sha256"], "properties": {"kind": {"type": "string", "minLength": 1}, "path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}}},
+    "artifact": {"type": "object", "required": ["path", "sha256"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}}},
+    "provenance": {"allOf": [{"$ref": "#/$defs/artifact"}, {"type": "object", "required": ["derivation_id"], "properties": {"derivation_id": {"type": "string", "minLength": 1}}}]}
+  }
+}

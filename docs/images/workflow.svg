@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="560" viewBox="0 0 1200 560" role="img" aria-labelledby="title desc">
+<title id="title">HEBI heritage modeling workflow</title>
+<desc id="desc">Choose a source mode, interpret references, prototype a bay and junction, propagate components and tags, then review actual model evidence.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#50d7e6"/></marker></defs>
+<rect width="1200" height="560" rx="24" fill="#081724"/>
+<g font-family="Microsoft YaHei, sans-serif">
+<text x="48" y="62" fill="#c8ff00" font-size="18" font-weight="bold">HEBI / HERITAGE TO SKETCHUP</text>
+<text x="48" y="106" fill="#ffffff" font-size="30" font-weight="bold">Read the reference. Resolve the junction. Keep the evidence.</text>
+<g fill="#112d3b" stroke="#50d7e6" stroke-width="1.5">
+<rect x="45" y="154" width="195" height="119" rx="12"/><rect x="275" y="154" width="195" height="119" rx="12"/>
+<rect x="505" y="154" width="195" height="119" rx="12"/><rect x="735" y="154" width="195" height="119" rx="12"/>
+<rect x="965" y="154" width="190" height="119" rx="12"/></g>
+<g fill="#fff" font-size="21" font-weight="bold" text-anchor="middle">
+<text x="142" y="197">01 Scope</text><text x="372" y="197">02 Interpret</text><text x="602" y="197">03 Prototype</text><text x="832" y="197">04 Propagate</text><text x="1060" y="197">05 Review</text></g>
+<g fill="#b8d0db" font-size="16" text-anchor="middle">
+<text x="142" y="237">Drawings / images / SKP</text><text x="372" y="237">Authority / constraints</text><text x="602" y="237">Bays / roofs / junctions</text><text x="832" y="237">Families / tags / finish</text><text x="1060" y="237">Appearance / continuity</text></g>
+<g stroke="#50d7e6" stroke-width="2" fill="none" marker-end="url(#arrow)">
+<path d="M243 214H267"/><path d="M473 214H497"/><path d="M703 214H727"/><path d="M933 214H957"/>
+<path d="M1060 280V313H142V280"/></g>
+<rect x="409" y="294" width="390" height="37" rx="10" fill="#081724"/>
+<text x="604" y="319" text-anchor="middle" fill="#50d7e6" font-size="17">Mismatch? Repair the underlying relationship.</text>
+<rect x="45" y="360" width="1110" height="111" rx="14" fill="#17303a"/>
+<text x="72" y="399" fill="#c8ff00" font-size="22" font-weight="bold">Review: a human OR an available independent agent</text>
+<text x="72" y="434" fill="#fff" font-size="18">Match checks to source mode. Record actual feedback. Keep uncertain details explicit.</text>
+<text x="48" y="516" fill="#9ab3c2" font-size="17">Experimental workflow. Static checks only; no new end-to-end SketchUp modeling trial.</text>
+</g></svg>

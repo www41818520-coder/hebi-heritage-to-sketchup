@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cad_to_sketchup.delivery_receipt.2026-08-06",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "receipt_id", "package_id", "project_id", "status", "delivered_at", "delivery_manifest", "accepted_qa", "delivered_model", "report", "confirmation_id", "gate", "unresolved"],
+  "properties": {
+    "schema": {"const": "cad_to_sketchup.delivery_receipt.2026-08-06"},
+    "receipt_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+    "package_id": {"type": "string", "minLength": 1}, "project_id": {"type": "string", "minLength": 1},
+    "status": {"const": "DELIVERED"}, "delivered_at": {"type": "string", "format": "date-time"},
+    "delivery_manifest": {"$ref": "#/$defs/artifact"}, "accepted_qa": {"$ref": "#/$defs/artifact"},
+    "delivered_model": {"$ref": "#/$defs/artifact"}, "report": {"$ref": "#/$defs/artifact"},
+    "confirmation_id": {"type": "string", "minLength": 1},
+    "gate": {"type": "object", "additionalProperties": false, "required": ["stage", "status", "manifest_sha256", "qa_sha256"], "properties": {"stage": {"const": "delivery"}, "status": {"const": "PASS"}, "manifest_sha256": {"$ref": "#/$defs/sha256"}, "qa_sha256": {"$ref": "#/$defs/sha256"}}},
+    "unresolved": {"type": "array", "maxItems": 0}
+  },
+  "$defs": {"sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}, "artifact": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}}}}
+}

@@ -1,0 +1,379 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cad_to_sketchup.building_topology.2026-08-05",
+  "title": "Confirmed Building Topology Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema", "contract_id", "project_id", "revision", "status", "upstream",
+    "derivation", "coordinate_system", "registrations", "control_basis",
+    "white_model", "topology_audit", "user_confirmation", "levels", "walls", "internal_walls",
+    "slabs", "roofs", "roof_lights", "openings", "curtain_walls", "sweeps", "canopies",
+    "materials", "unresolved"
+  ],
+  "properties": {
+    "schema": {"const": "cad_to_sketchup.building_topology.2026-08-05"},
+    "contract_id": {"type": "string", "minLength": 1},
+    "project_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "status": {"const": "confirmed"},
+    "upstream": {"$ref": "#/$defs/upstream"},
+    "derivation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "agent_role"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "agent_role": {"const": "topology_derivation"}
+      }
+    },
+    "coordinate_system": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["units", "origin", "x_axis", "y_axis", "z_axis", "elevation_datum"],
+      "properties": {
+        "units": {"const": "mm"},
+        "origin": {"$ref": "#/$defs/point3"},
+        "x_axis": {"$ref": "#/$defs/vector3"},
+        "y_axis": {"$ref": "#/$defs/vector3"},
+        "z_axis": {"$ref": "#/$defs/vector3"},
+        "elevation_datum": {"type": "string", "minLength": 1}
+      }
+    },
+    "registrations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/registration"}
+    },
+    "control_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["priority", "control_mass"],
+      "properties": {
+        "priority": {"const": ["user_confirmation", "control_mass", "cad_measurement", "documented_default"]},
+        "control_mass": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provided", "scope"],
+          "properties": {
+            "provided": {"type": "boolean"},
+            "scope": {"enum": ["none", "envelope_only"]},
+            "path": {"type": "string"},
+            "sha256": {"$ref": "#/$defs/sha256"}
+          }
+        }
+      }
+    },
+    "white_model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["model_path", "model_sha256", "stage", "review_views"],
+      "properties": {
+        "model_path": {"type": "string", "minLength": 1},
+        "model_sha256": {"$ref": "#/$defs/sha256"},
+        "stage": {"const": "topology_white_model"},
+        "review_views": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/artifact_view"}
+        }
+      }
+    },
+    "topology_audit": {
+      "type": "object",
+      "additionalProperties": false,
+        "required": ["schema", "status", "candidate_path", "candidate_sha256", "review_path", "review_sha256", "reviewer", "topology_derivation_id", "checks", "confirmation_boundary_presented"],
+      "properties": {
+        "schema": {"const": "cad_to_sketchup.topology_review.2026-08-05"},
+        "status": {"const": "verified"},
+        "candidate_path": {"type": "string", "minLength": 1},
+        "candidate_sha256": {"$ref": "#/$defs/sha256"},
+        "review_path": {"type": "string", "minLength": 1},
+        "review_sha256": {"$ref": "#/$defs/sha256"},
+        "reviewer": {"$ref": "#/$defs/reviewer"},
+        "topology_derivation_id": {"type": "string", "minLength": 1},
+        "checks": {"$ref": "#/$defs/audit_checks"},
+        "confirmation_boundary_presented": {"const": true}
+      }
+    },
+    "user_confirmation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["confirmed", "confirmation_id", "instruction", "model_sha256", "candidate_sha256"],
+      "properties": {
+        "confirmed": {"const": true},
+        "confirmation_id": {"type": "string", "minLength": 1},
+        "instruction": {"type": "string", "minLength": 1},
+        "model_sha256": {"$ref": "#/$defs/sha256"},
+        "candidate_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "levels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/level"}
+    },
+    "walls": {
+      "type": "array",
+      "minItems": 3,
+      "items": {"$ref": "#/$defs/wall"}
+    },
+    "internal_walls": {"type": "array", "items": {"$ref": "#/$defs/internal_wall"}},
+    "columns": {"type": "array", "items": {"$ref": "#/$defs/column"}},
+    "slabs": {"type": "array", "items": {"$ref": "#/$defs/slab"}},
+    "roofs": {"type": "array", "items": {"$ref": "#/$defs/roof"}},
+    "roof_lights": {"type": "array", "items": {"$ref": "#/$defs/roof_light"}},
+    "openings": {"type": "array", "items": {"$ref": "#/$defs/opening"}},
+    "curtain_walls": {"type": "array", "items": {"$ref": "#/$defs/curtain_wall"}},
+    "sweeps": {"type": "array", "items": {"$ref": "#/$defs/sweep"}},
+    "canopies": {"type": "array", "items": {"$ref": "#/$defs/canopy"}},
+    "access_elements": {"type": "array", "items": {"$ref": "#/$defs/access_element"}},
+    "materials": {"type": "array", "items": {"$ref": "#/$defs/material"}},
+    "unresolved": {"type": "array", "maxItems": 0}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "upstream": {"type": "array", "minItems": 1, "items": {"type": "object", "required": ["kind", "path", "sha256"], "properties": {"kind": {"type": "string"}, "path": {"type": "string"}, "sha256": {"$ref": "#/$defs/sha256"}}}},
+    "point": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}], "minItems": 2, "maxItems": 2},
+    "point3": {"type": "array", "prefixItems": [{"type": "number"}, {"type": "number"}, {"type": "number"}], "minItems": 3, "maxItems": 3},
+    "vector3": {"$ref": "#/$defs/point3"},
+    "polygon": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point"}},
+    "path3": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/point3"}},
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_view_id", "kind", "source_entity_ids"],
+      "properties": {
+        "source_view_id": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["measured_plan", "measured_elevation", "measured_section", "measured_end_profile", "explicit_user_control", "cad_annotation"]},
+        "source_entity_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "evidence_list": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/evidence"}},
+    "level": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "elevation_mm", "top_elevation_mm", "footprint", "exterior_wall_ring", "evidence"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "elevation_mm": {"type": "number"},
+        "top_elevation_mm": {"type": "number"},
+        "footprint": {"$ref": "#/$defs/polygon"},
+        "exterior_wall_ring": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["closed", "continuous_group", "wall_ids"],
+          "properties": {
+            "closed": {"const": true},
+            "continuous_group": {"const": true},
+            "wall_ids": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+          }
+        },
+        "evidence": {"$ref": "#/$defs/evidence_list"}
+      }
+    },
+    "wall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "level_id", "start", "end", "thickness_mm", "owns_exterior_face", "evidence"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "level_id": {"type": "string", "minLength": 1},
+        "start": {"$ref": "#/$defs/point"},
+        "end": {"$ref": "#/$defs/point"},
+        "thickness_mm": {"type": "number", "exclusiveMinimum": 0},
+        "top_profile": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "array",
+            "prefixItems": [{"type": "number", "minimum": 0}, {"type": "number"}],
+            "items": false,
+            "minItems": 2,
+            "maxItems": 2
+          }
+        },
+        "owns_exterior_face": {"const": true},
+        "evidence": {"$ref": "#/$defs/evidence_list"}
+      }
+    },
+    "column": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "level_id", "footprint", "base_elevation_mm", "top_elevation_mm", "evidence"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1}, "level_id": {"type": "string", "minLength": 1},
+        "footprint": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point"}},
+        "voids": {"type": "array", "items": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point"}}},
+        "base_elevation_mm": {"type": "number"}, "top_elevation_mm": {"type": "number"},
+        "evidence": {"$ref": "#/$defs/evidence_list"}
+      }
+    },
+    "internal_wall": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "level_id", "start", "end", "thickness_mm", "base_elevation_mm", "top_elevation_mm", "vertical_extent_basis", "evidence"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "level_id": {"type": "string", "minLength": 1},
+        "start": {"$ref": "#/$defs/point"},
+        "end": {"$ref": "#/$defs/point"},
+        "thickness_mm": {"type": "number", "exclusiveMinimum": 0},
+        "base_elevation_mm": {"type": "number"},
+        "top_elevation_mm": {"type": "number"},
+        "vertical_extent_basis": {"enum": ["plan_height_annotation", "upper_cut_presence", "upper_cut_absence_plus_room_height"]},
+        "start_termination": {"$ref": "#/$defs/internal_wall_termination"},
+        "end_termination": {"$ref": "#/$defs/internal_wall_termination"},
+        "evidence": {"$ref": "#/$defs/evidence_list"}
+      }
+    },
+    "internal_wall_termination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule", "host_wall_id"],
+      "properties": {
+        "rule": {"const": "stop_at_exterior_inner_face"},
+        "host_wall_id": {"type": "string", "minLength": 1}
+      }
+    },
+    "registration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "source_view_id", "qa_view", "role", "source_bounds", "transform", "visible_topology_ids", "anchor_evidence", "status"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "source_view_id": {"type": "string", "minLength": 1},
+        "qa_view": {"type": "string", "minLength": 1},
+        "role": {"enum": ["plan", "roof_plan", "elevation", "section"]},
+        "source_bounds": {
+          "type": "object", "additionalProperties": false,
+          "required": ["xmin", "ymin", "xmax", "ymax"],
+          "properties": {"xmin": {"type": "number"}, "ymin": {"type": "number"}, "xmax": {"type": "number"}, "ymax": {"type": "number"}}
+        },
+        "section_cut_elevation_mm": {"type": "number"},
+        "transform": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["source_origin", "origin", "x_axis", "y_axis", "scale"],
+          "properties": {
+            "source_origin": {"$ref": "#/$defs/point"},
+            "origin": {"$ref": "#/$defs/point3"},
+            "x_axis": {"$ref": "#/$defs/vector3"},
+            "y_axis": {"$ref": "#/$defs/vector3"},
+            "scale": {"type": "number", "exclusiveMinimum": 0}
+          }
+        },
+        "visible_topology_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "anchor_evidence": {"type": "array", "minItems": 2, "items": {"$ref": "#/$defs/evidence"}},
+        "status": {"const": "verified"}
+      }
+    },
+    "artifact_view": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_view_id", "role", "path", "sha256"],
+      "properties": {
+        "source_view_id": {"type": "string", "minLength": 1},
+        "role": {"enum": ["plan", "roof_plan", "elevation", "section", "perspective"]},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "derivation_id"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "derivation_id": {"type": "string", "minLength": 1}}
+    },
+    "audit_checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["all_required_views_registered", "floor_footprints_match", "wall_rings_closed", "slabs_contained", "openings_registered_and_hosted", "curtain_walls_registered", "sweep_paths_profiles_and_corners_complete", "canopies_cross_view_complete", "roofs_registered", "no_unsupported_geometry", "white_model_readable"],
+      "properties": {
+        "all_required_views_registered": {"const": true},
+        "floor_footprints_match": {"const": true},
+        "wall_rings_closed": {"const": true},
+        "slabs_contained": {"const": true},
+        "openings_registered_and_hosted": {"const": true},
+        "curtain_walls_registered": {"const": true},
+        "sweep_paths_profiles_and_corners_complete": {"const": true},
+        "canopies_cross_view_complete": {"const": true},
+        "roofs_registered": {"const": true},
+        "no_unsupported_geometry": {"const": true},
+        "white_model_readable": {"const": true}
+      }
+    },
+    "slab": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "level_id", "boundary", "top_elevation_mm", "thickness_mm", "evidence"],
+      "properties": {"id": {"type": "string"}, "level_id": {"type": "string"}, "boundary": {"$ref": "#/$defs/polygon"}, "top_elevation_mm": {"type": "number"}, "thickness_mm": {"type": "number", "exclusiveMinimum": 0}, "evidence": {"$ref": "#/$defs/evidence_list"}}
+    },
+    "roof": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "base_level_id", "boundary", "base_elevation_mm", "thickness_mm", "topology_type", "evidence"],
+      "properties": {"id": {"type": "string"}, "base_level_id": {"type": "string"}, "boundary": {"$ref": "#/$defs/polygon"}, "base_elevation_mm": {"type": "number"}, "thickness_mm": {"type": "number", "exclusiveMinimum": 0}, "topology_type": {"enum": ["flat", "pitched", "compound"]}, "shell_faces": {"type": "array", "minItems": 1, "items": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point3"}}}, "evidence": {"$ref": "#/$defs/evidence_list"}}
+    },
+    "roof_light": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "host_roof_id", "boundary", "system_type", "true_opening", "evidence"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "host_roof_id": {"type": "string", "minLength": 1},
+        "boundary": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point3"}},
+        "system_type": {"enum": ["skylight_strip", "roof_hatch", "roof_opening"]},
+        "true_opening": {"type": "boolean"},
+        "evidence": {"$ref": "#/$defs/evidence_list"}
+      }
+    },
+    "opening": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "level_id", "host_wall_id", "type", "position", "sill_elevation_mm", "width_mm", "height_mm", "cut_depth_mm", "depth_basis", "through_cut", "evidence"],
+      "properties": {
+        "id": {"type": "string"}, "level_id": {"type": "string"}, "host_wall_id": {"type": "string"},
+        "type": {"enum": ["door", "window", "louver", "other"]}, "position": {"$ref": "#/$defs/point"},
+        "sill_elevation_mm": {"type": "number"}, "width_mm": {"type": "number", "exclusiveMinimum": 0},
+        "height_mm": {"type": "number", "exclusiveMinimum": 0}, "wall_thickness_mm": {"type": "number", "exclusiveMinimum": 0},
+        "cut_depth_mm": {"type": "number", "exclusiveMinimum": 0}, "depth_basis": {"enum": ["measured_wall_thickness", "default_200_missing_wall_thickness"]},
+        "through_cut": {"const": true}, "evidence": {"$ref": "#/$defs/evidence_list"}
+      }
+    },
+    "curtain_wall": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "level_ids", "host_plane", "boundary", "evidence"],
+      "properties": {"id": {"type": "string"}, "level_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}}, "host_plane": {"type": "string", "minLength": 1}, "boundary": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point3"}}, "evidence": {"$ref": "#/$defs/evidence_list"}}
+    },
+    "sweep": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "path", "path_continuous", "profile", "profile_basis", "profile_evidence", "datum_evidence", "covered_facades", "corner_policy", "termination_policy", "evidence"],
+      "properties": {
+        "id": {"type": "string"}, "path": {"$ref": "#/$defs/path3"}, "path_continuous": {"const": true},
+        "profile": {"$ref": "#/$defs/polygon"}, "profile_basis": {"type": "object", "additionalProperties": false, "required": ["u_axis", "v_axis"], "properties": {"u_axis": {"$ref": "#/$defs/vector3"}, "v_axis": {"$ref": "#/$defs/vector3"}}}, "profile_evidence": {"$ref": "#/$defs/evidence"},
+        "datum_evidence": {"$ref": "#/$defs/evidence_list"}, "covered_facades": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+        "corner_policy": {"const": "continuous_turn"}, "termination_policy": {"enum": ["closed_loop", "evidence_bound_ends"]},
+        "evidence": {"$ref": "#/$defs/evidence_list"}
+      }
+    },
+    "canopy": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "host_wall_id", "footprint", "base_elevation_mm", "thickness_mm", "closed_volume", "orthogonal_elevation_views", "thickness_evidence", "evidence"],
+      "properties": {"id": {"type": "string"}, "host_wall_id": {"type": "string"}, "footprint": {"$ref": "#/$defs/polygon"}, "base_elevation_mm": {"type": "number"}, "thickness_mm": {"type": "number", "exclusiveMinimum": 0}, "closed_volume": {"const": true}, "orthogonal_elevation_views": {"type": "array", "minItems": 0, "uniqueItems": true, "items": {"type": "string"}}, "plan_elevation_resolution": {"type": "object", "additionalProperties": false, "required": ["policy", "path", "sha256"], "properties": {"policy": {"const": "user_confirmed_plan_xy_elevation_z"}, "path": {"type": "string"}, "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}}}, "thickness_evidence": {"$ref": "#/$defs/evidence"}, "evidence": {"$ref": "#/$defs/evidence_list"}}
+    },
+    "access_element": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "kind", "host_wall_id", "shell_faces", "lower_elevation_mm", "upper_elevation_mm", "evidence"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["entrance_ramp", "entrance_steps"]},
+        "host_wall_id": {"type": "string", "minLength": 1},
+        "shell_faces": {"type": "array", "minItems": 4, "items": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point3"}}},
+        "lower_elevation_mm": {"type": "number"},
+        "upper_elevation_mm": {"type": "number"},
+        "evidence": {"$ref": "#/$defs/evidence_list"}
+      }
+    },
+    "material": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "geometric_effect", "evidence"],
+      "properties": {"id": {"type": "string"}, "geometric_effect": {"type": "boolean"}, "evidence": {"$ref": "#/$defs/evidence"}}
+    }
+  }
+}

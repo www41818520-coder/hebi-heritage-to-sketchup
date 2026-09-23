@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cad_to_sketchup.skill_mark.2026-08-06",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "issue_id", "project_id", "created_at", "invalidation", "mistake", "root_cause", "transferable_rule", "prevention_check", "rule_scope", "promoted_to", "regression"],
+  "properties": {
+    "schema": {"const": "cad_to_sketchup.skill_mark.2026-08-06"},
+    "issue_id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]*$"},
+    "project_id": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "invalidation": {"$ref": "#/$defs/artifact"},
+    "mistake": {"type": "string", "minLength": 1},
+    "root_cause": {"type": "string", "minLength": 1},
+    "transferable_rule": {"type": "string", "minLength": 1},
+    "prevention_check": {"type": "string", "minLength": 1},
+    "rule_scope": {"enum": ["transferable", "project_specific"]},
+    "promoted_to": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "regression": {
+      "type": "object", "additionalProperties": false,
+      "required": ["test_file", "test_id", "result", "status"],
+      "properties": {"test_file": {"type": "string", "minLength": 1}, "test_id": {"type": "string", "minLength": 1}, "result": {"$ref": "#/$defs/artifact"}, "status": {"const": "PASS"}}
+    }
+  },
+  "$defs": {"artifact": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}}}}
+}

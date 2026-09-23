@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cad_to_sketchup.sketchup_build_derivation.2026-08-06",
+  "title": "SketchUp Production Build Derivation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "contract_id", "project_id", "revision", "status", "upstream", "derivation", "target", "opening_assemblies", "curtain_wall_systems", "material_assignments", "blocking_reasons", "unresolved"],
+  "properties": {
+    "schema": {"const": "cad_to_sketchup.sketchup_build_derivation.2026-08-06"},
+    "contract_id": {"type": "string", "minLength": 1},
+    "project_id": {"type": "string", "minLength": 1},
+    "revision": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["detail_specification_required", "ready_for_compile"]},
+    "upstream": {"$ref": "building-topology.schema.json#/$defs/upstream"},
+    "derivation": {"type": "object", "additionalProperties": false, "required": ["id", "agent_role"], "properties": {"id": {"type": "string"}, "agent_role": {"const": "production_specification"}}},
+    "target": {"$ref": "#/$defs/target"},
+    "opening_assemblies": {"type": "array", "items": {"$ref": "#/$defs/opening_assembly"}},
+    "curtain_wall_systems": {"type": "array", "items": {"$ref": "#/$defs/curtain_wall_system"}},
+    "material_assignments": {"type": "array", "items": {"$ref": "#/$defs/material_assignment"}},
+    "blocking_reasons": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "unresolved": {"type": "array"}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "ratio": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1},
+    "target": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_model_path", "source_model_sha256", "output_model_path", "result_path", "report_path"],
+      "properties": {
+        "source_model_path": {"type": "string", "minLength": 1}, "source_model_sha256": {"$ref": "#/$defs/sha256"},
+        "output_model_path": {"type": "string", "minLength": 1}, "result_path": {"type": "string", "minLength": 1}, "report_path": {"type": "string", "minLength": 1}
+      }
+    },
+    "opening_assembly": {
+      "type": "object", "additionalProperties": false,
+      "required": ["topology_id", "status", "family_id", "frame_width_mm", "frame_depth_mm", "inset_mm", "panel_type", "mullion_ratios", "transom_ratios", "evidence"],
+      "properties": {
+        "topology_id": {"type": "string", "minLength": 1}, "status": {"enum": ["specification_required", "verified"]}, "family_id": {"type": "string"},
+        "frame_width_mm": {"type": ["number", "null"], "exclusiveMinimum": 0}, "frame_depth_mm": {"type": ["number", "null"], "exclusiveMinimum": 0}, "inset_mm": {"type": ["number", "null"], "minimum": 0},
+        "panel_type": {"enum": ["unspecified", "void_only", "glass", "solid", "mixed"]},
+        "panel_rectangles_mm": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "array", "minItems": 4, "maxItems": 4, "items": {"type": "number"}}},
+        "mullion_ratios": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/ratio"}}, "transom_ratios": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/ratio"}},
+        "evidence": {"type": "array", "items": {"$ref": "building-topology.schema.json#/$defs/evidence"}}
+      }
+    },
+    "curtain_wall_system": {
+      "type": "object", "additionalProperties": false,
+      "required": ["topology_id", "status", "family_id", "frame_width_mm", "frame_depth_mm", "inset_mm", "panel_type", "vertical_ratios", "horizontal_ratios", "evidence"],
+      "properties": {
+        "topology_id": {"type": "string", "minLength": 1}, "status": {"enum": ["specification_required", "verified"]}, "family_id": {"type": "string"},
+        "frame_width_mm": {"type": ["number", "null"], "exclusiveMinimum": 0}, "frame_depth_mm": {"type": ["number", "null"], "exclusiveMinimum": 0}, "inset_mm": {"type": ["number", "null"], "minimum": 0}, "panel_type": {"enum": ["unspecified", "glass", "solid", "mixed"]},
+        "vertical_ratios": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/ratio"}}, "horizontal_ratios": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/ratio"}},
+        "evidence": {"type": "array", "items": {"$ref": "building-topology.schema.json#/$defs/evidence"}}
+      }
+    },
+    "material_assignment": {
+      "type": "object", "additionalProperties": false,
+      "required": ["material_id", "status", "display_name", "rgba", "target_topology_ids", "evidence"],
+      "properties": {
+        "material_id": {"type": "string", "minLength": 1}, "status": {"enum": ["specification_required", "verified"]}, "display_name": {"type": "string"},
+        "skm_asset": {"type": "object", "additionalProperties": false, "required": ["path", "sha256"], "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"}}},
+        "rgba": {"type": ["array", "null"], "prefixItems": [{"type": "integer", "minimum": 0, "maximum": 255}, {"type": "integer", "minimum": 0, "maximum": 255}, {"type": "integer", "minimum": 0, "maximum": 255}, {"type": "integer", "minimum": 0, "maximum": 255}], "minItems": 4, "maxItems": 4},
+        "target_topology_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "evidence": {"type": "array", "items": {"$ref": "building-topology.schema.json#/$defs/evidence"}}
+      }
+    }
+  }
+}

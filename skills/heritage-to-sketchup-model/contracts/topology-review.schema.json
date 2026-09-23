@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "cad_to_sketchup.topology_review.2026-08-05",
+  "title": "Independent Topology Review",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "candidate_sha256", "topology_derivation_id", "reviewer", "status", "view_results", "checks", "confirmation_boundary", "unresolved", "user_confirmation"],
+  "properties": {
+    "schema": {"const": "cad_to_sketchup.topology_review.2026-08-05"},
+    "candidate_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+    "topology_derivation_id": {"type": "string", "minLength": 1},
+    "reviewer": {
+      "type": "object", "additionalProperties": false, "required": ["id", "derivation_id"],
+      "properties": {"id": {"type": "string", "minLength": 1}, "derivation_id": {"type": "string", "minLength": 1}}
+    },
+    "status": {"const": "verified"},
+    "view_results": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "required": ["source_view_id", "qa_view", "status", "evidence_path", "evidence_sha256", "checks", "notes"],
+        "properties": {
+          "source_view_id": {"type": "string", "minLength": 1},
+          "qa_view": {"type": "string", "minLength": 1},
+          "status": {"const": "PASS"},
+          "evidence_path": {"type": "string", "minLength": 1},
+          "evidence_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+          "checks": {
+            "type": "object", "additionalProperties": false,
+            "required": ["registration_correct", "silhouette_complete", "object_hosting_correct", "cross_view_consistent"],
+            "properties": {"registration_correct": {"const": true}, "silhouette_complete": {"const": true}, "object_hosting_correct": {"const": true}, "cross_view_consistent": {"const": true}}
+          },
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "checks": {"$ref": "building-topology.schema.json#/$defs/audit_checks"},
+    "confirmation_boundary": {
+      "type": "object", "additionalProperties": false,
+      "required": ["presented_to_user", "must_review", "allowed_to_ignore", "cad_detected_but_missing"],
+      "properties": {
+        "presented_to_user": {"const": true},
+        "must_review": {
+          "type": "object", "additionalProperties": false,
+          "required": ["envelope_and_levels", "wall_roof_closure", "slabs_and_roofs", "openings", "curtain_walls", "sweeps_and_cornices", "canopies", "entrance_steps_and_ramps", "material_zone_boundaries", "interior_wall_terminations"],
+          "properties": {
+            "envelope_and_levels": {"$ref": "#/$defs/boundary_item"},
+            "wall_roof_closure": {"$ref": "#/$defs/boundary_item"},
+            "slabs_and_roofs": {"$ref": "#/$defs/boundary_item"},
+            "openings": {"$ref": "#/$defs/boundary_item"},
+            "curtain_walls": {"$ref": "#/$defs/boundary_item"},
+            "sweeps_and_cornices": {"$ref": "#/$defs/boundary_item"},
+            "canopies": {"$ref": "#/$defs/boundary_item"},
+            "entrance_steps_and_ramps": {"$ref": "#/$defs/boundary_item"},
+            "material_zone_boundaries": {"$ref": "#/$defs/boundary_item"},
+            "interior_wall_terminations": {"$ref": "#/$defs/boundary_item"}
+          }
+        },
+        "allowed_to_ignore": {"const": ["exact_material_appearance", "glass_optics", "fine_frame_hardware", "rendering_and_entourage"]},
+        "cad_detected_but_missing": {"type": "array", "maxItems": 0}
+      }
+    },
+    "unresolved": {"type": "array", "maxItems": 0},
+    "user_confirmation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["confirmed", "confirmation_id", "instruction", "model_sha256", "candidate_sha256"],
+      "properties": {
+        "confirmed": {"const": true}, "confirmation_id": {"type": "string", "minLength": 1},
+        "instruction": {"type": "string", "minLength": 1},
+        "model_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"},
+        "candidate_sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}
+      }
+    }
+  },
+  "$defs": {
+    "boundary_item": {
+      "type": "object", "additionalProperties": false,
+      "required": ["source_status", "white_model_status", "candidate_count", "evidence_view_ids", "notes"],
+      "properties": {
+        "source_status": {"enum": ["present", "not_applicable"]},
+        "white_model_status": {"enum": ["present", "not_applicable", "user_deferred"]},
+        "scope_confirmation": {
+          "type": "object", "additionalProperties": false, "required": ["path", "sha256"],
+          "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"type": "string", "pattern": "^[0-9a-fA-F]{64}$"}}
+        },
+        "candidate_count": {"type": "integer", "minimum": 0},
+        "evidence_view_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "notes": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

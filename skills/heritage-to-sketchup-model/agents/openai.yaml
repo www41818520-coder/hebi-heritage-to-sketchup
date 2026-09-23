@@ -1,0 +1,4 @@
+interface:
+  display_name: "HEBI 古建 SketchUp（实验版）"
+  short_description: "古建与仿古SketchUp建模：效果图推演、构件交接检查、标记场景管理"
+  default_prompt: "Use $heritage-to-sketchup-model to refine my traditional architectural model, preserve confirmed constraints, and review the relevant junctions."
