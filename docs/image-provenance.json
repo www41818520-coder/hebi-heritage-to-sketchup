@@ -1,0 +1,32 @@
+[
+  {
+    "image": "01-roof-junction.png",
+    "model_version": "V16",
+    "sha256": "ab65404cd21fc3bbd7bd57888ab70b209f400ad43992b6e05a7feeb26d66ac4a",
+    "kind": "actual project model screenshot; not a new Skill regression test"
+  },
+  {
+    "image": "02-gable.png",
+    "model_version": "V16",
+    "sha256": "c6159e3a04c192c1f48095326c6bf7c7fc32939b14e4ae2360f0d4f291ae74f2",
+    "kind": "actual project model screenshot; not a new Skill regression test"
+  },
+  {
+    "image": "03-timber-infill.png",
+    "model_version": "V18",
+    "sha256": "36b1ffd21f4364126de4e4f44428cf2a4d3fffd1dcc9fa5cb9e6298a8564f87e",
+    "kind": "actual project model screenshot; not a new Skill regression test"
+  },
+  {
+    "image": "04-gate-detail.png",
+    "model_version": "V20",
+    "sha256": "a7c2988e0504b1ac7f13c36cd419eea092e9e8d1939d19312910c8950a6913e1",
+    "kind": "actual project model screenshot; not a new Skill regression test"
+  },
+  {
+    "image": "05-growth-stages.jpg",
+    "model_version": "V19",
+    "sha256": "ba5edea41074af0e55300ae7c541b4cb6ac0451e612ddad6f33812b93b88623e",
+    "kind": "actual project model screenshot; not a new Skill regression test"
+  }
+]
